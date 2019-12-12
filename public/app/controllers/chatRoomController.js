@@ -1,6 +1,8 @@
 var textarea = document.getElementById("textArea");
 var chatLog = "";
 
+const SEARCH_API_URL = "http://localhost:5000";
+
 angular.module('Controllers')
 .directive('scrollBottom', function () {		// custom directive for scrolling bottom on new message load
   return {
@@ -303,6 +305,10 @@ angular.module('Controllers')
 		Alert.Alert.spawn("LaTeX Source", "<pre><code>" + source + "</code></pre>");
 	};
 
+	$scope.searchEquation = function(source) {
+		window.open(SEARCH_API_URL + '/search?query=' + source.substring(2, source.length - 2), '_blank');
+	};
+
     /**
 	 * Manually send a message to the chat room
      * @param msg
@@ -327,7 +333,7 @@ angular.module('Controllers')
 	$scope.announceMsg = function(msg){
 		$socket.emit("announce-message", msg, function(data){});
 	};
-	
+
     /**
 	 * Open a base64 image in new tab.
      * @param img - Image in base64 format.
@@ -558,15 +564,15 @@ angular.module('Controllers')
 				var msg = new Chat.Message(data.raw_data);
 				var btn = document.createElement("BUTTON");
 				btn.setAttribute("id", "close");
-				btn.innerHTML = '╳';  
+				btn.innerHTML = '╳';
 				btn.onclick = function(){
 					$("#announce-area").css('display', 'none');
 				};
-				
+
 				$("#announce-area")[0].innerText = "";
 				$("#announce-area").css('display', 'inline-block');
 				$("#announce-area").append('<i class="fa fa-exclamation-circle" aria-hidden="true"></i> ' + 'Announcement By ' + "\r\n" + msg.getUsername());
-				$("#announce-area").append(btn);	
+				$("#announce-area").append(btn);
 				if(msg.getText().isImage()){
 					let image = new Image();
 					image.src = msg.getText().getImage();
@@ -588,11 +594,11 @@ angular.module('Controllers')
 				else if(msg.getText().getRaw().includes("$$")){
 					$("#announce-area").css('height', '120px');
 					$("#announce-area").append('<p>' + msg.getText().getRaw() + '</p>');
-				}	
+				}
 				else{
 					$("#announce-area").css('height', '90px');
 					$("#announce-area").append('<p>' + msg.getText().getRaw() + '</p>');
-				};							
+				};
 	});
 // ====================================== Image Sending Code ==============================
     $scope.$watch('upload.image', function () {

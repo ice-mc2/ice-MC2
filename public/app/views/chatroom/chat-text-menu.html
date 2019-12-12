@@ -34,6 +34,11 @@
             title="Show LaTeX Source">
         <i class="fa fa-code" aria-hidden="true"></i>
     </button>
+    <button ng-if="message.getText().isEquation()"
+            ng-click="searchEquation(message.getText().getRaw())"
+            title="Search Equation">
+        <i class="fa fa-search" aria-hidden="true"></i>
+    </button>
     <button ng-click="announceMsg(message)"
             ng-if="isAdmin && message.isChat()"
             title="Announcement Message">
